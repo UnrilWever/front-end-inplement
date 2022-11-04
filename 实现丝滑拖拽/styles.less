@@ -6,6 +6,15 @@
 .active {
   cursor: grabbing;
 }
+.hide {
+  opacity: 0;
+}
+
+.flutter {
+  position: absolute;
+  z-index:9999;
+  pointer-events:none;
+}
 
 .slide {
   width: 260px;
@@ -16,6 +25,7 @@
     user-select: none;
     .item {
       background: rgba(0, 0, 0, 0.15);
+      transform-origin: top left;
       width: 120px;
       display: inline-block;
       break-inside: avoid;
@@ -23,10 +33,14 @@
     }
     .item:hover {
       cursor: grab;
+      transform: scale(1.02);
       filter: brightness(90%);
     }
     .item:active {
       cursor: grabbing;
+    }
+    .is_return {
+      transition: all 0.3s;
     }
   }
   .grid {
@@ -48,4 +62,13 @@
     position: absolute;
     transform-origin: top left;
   }
+  #tip {
+    color: #999999;
+    font-size: 28px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
+

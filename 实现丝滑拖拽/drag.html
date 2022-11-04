@@ -17,14 +17,87 @@
           <img class="item" src="https://images.unsplash.com/photo-1667264140316-f640d343d35d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80" />
         </div>
       </div>
-      <div class="content"></div>
+      <div id="content">
+        <span id="tip">拖动图片放置于此</span>
+      </div>
     </div>
   </body>
   <script>
-    let draggin = false
+    let dragging = false
     let cloneEl = null
     let initial = {}
+    let queue = []
 
-    cloneEl = e.target
+    document.getElementById('list').addEventListener('mousedown', function (e) {
+      e.preventDefault()
+      cloneEl = e.target.cloneNode(true)
+      cloneEl.classList.add('flutter')
+      init(e, { width: e.target.offsetWidth })
+
+      e.target.parentElement.appendChild(cloneEl)
+
+      dragging = true
+      e.target.classList.add('hide')
+    })
+
+    window.addEventListener('mousemove', (e) => {
+      if (dragging && cloneEl) {
+        moveFlutter(e.clientX - initial.offsetX, e.clientY - initial.offsetY, distance(e))
+      }
+    })
+
+    window.addEventListener('mouseup', (e) => {
+      dragging = false
+      document.getElementById('app').classList.remove('active')
+      setTimeout(() => {
+        end()
+      }, 10)
+    })
+
+    function end() {
+      dragging = false
+      if (!cloneEl) {
+        return
+      }
+      cloneEl.classList.add('is_return')
+      changeStyle([`left: ${initial.clientX - initial.offsetX}px`, `top: ${initial.clientY - initial.offsetY}px`, 'transform: scale(1)'])
+      setTimeout(() => {
+        queue.length && queue.shift()()
+        cloneEl && cloneEl.remove()
+        cloneEl = null
+      }, 300)
+    }
+
+    function init({ offsetX, offsetY, clientX, clientY }, { width }, fakeSize, flag) {
+      initial = { offsetX, offsetY, clientX, clientY, width, fakeSize, flag }
+      moveFlutter(clientX - offsetX, clientY - offsetY)
+    }
+
+    function moveFlutter(x, y, d = 0) {
+      const scale = d ? (initial.width + d <= initial.fakeSize ? `transform: scale(${(initial.width + d) / initial.width})` : null) : null
+      const options = [`left: ${x}px`, `top: ${y}px`]
+      scale && options.push(scale)
+      changeStyle(options)
+    }
+
+    function changeStyle(arr) {
+      const original = cloneEl.style.cssText.split(';')
+      original.pop()
+      cloneEl.style.cssText = original.concat(arr).join(';') + ';'
+    }
+
+    function distance({ clientX, clientY }) {
+      const { clientX: x, clientY: y } = initial
+      const b = clientX - x
+      const a = clientY - y
+      // return Math.sqrt(Math.pow(b, 2) + Math.pow(a, 2))
+
+      return Math.hypot(b, a)
+    }
+
+    function randomNum(n, m) {
+      return Math.random() * (m - n) + n
+    }
   </script>
+  <!-- <script src="./full-edition.js"></script> -->
 </html>
