@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="imgBox">
+      <img class="item" src="https://images.unsplash.com/photo-1661347333339-51786af3b406?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=387&q=80" />
+    </div>
+  </body>
+  <script>
+    const imgBox = document.querySelector('.imgBox')
+    let El = null
+    let initial = {}
+
+    imgBox.addEventListener('dragstart', (e) => {
+      console.log(e.offsetX, e.offsetY)
+      El = e.target
+      initial.offsetX = e.offsetX
+      initial.offsetY = e.offsetY
+    })
+    imgBox.addEventListener('dragover', (e) => {
+      console.log(e.pageX, e.pageY)
+    })
+    imgBox.addEventListener('dragend', (e) => {
+      console.log(e.pageX, e.pageY)
+      console.log(initial.offsetX, initial.offsetY)
+      moveFlutter(e.pageX - initial.offsetX, e.pageY - initial.offsetY)
+    })
+
+    const moveFlutter = (x, y) => {
+      let options = [`top:${y}px`, `left:${x}px`]
+      changeStyle(options)
+    }
+
+    const changeStyle = (arr) => {
+      console.log(arr)
+      El.style.cssText = arr.join(';') + ';'
+    }
+  </script>
+  <style>
+    * {
+      margin: 0;
+    }
+    .imgBox {
+      position: relative;
+      width: 10rem;
+      height: 10rem;
+      background-color: rgb(222, 222, 222);
+    }
+    .item {
+      position: absolute;
+      width: 3rem;
+      height: 3rem;
+    }
+  </style>
+</html>
