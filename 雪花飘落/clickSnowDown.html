@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        background-color: black;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="generate">生成雪花</button>
+    <script>
+      let documentHeight = window.innerHeight
+      let documentWidth = window.innerWidth
+
+      function snow() {
+        let startLeft = Math.random() * documentWidth
+        let endLeft = Math.random() * documentWidth
+
+        let durationTime = 4000 + 7000 * Math.random()
+
+        let flakeSize = 5 + 20 * Math.random()
+
+        let startOpacity = 0.7 + 0.3 * Math.random()
+        let endOpacity = 0.2 + 0.2 * Math.random()
+
+        let flake = document.createElement('div')
+        flake.innerHTML = '❆'
+        flake.style.cssText = `
+          position:absolute;
+          left:${startLeft}px;
+          top:-25px;
+          font-size:${flakeSize}px;
+          color:#fff;
+          opacity:${startOpacity};
+          transition:${durationTime}ms;
+        `
+
+        document.body.appendChild(flake)
+
+        setTimeout(() => {
+          flake.style.cssText += `
+            left:${endLeft}px;
+            top:${documentHeight}px;
+            opacity:${endOpacity};
+          `
+          setTimeout(() => {
+            document.body.removeChild(flake)
+          }, durationTime)
+        }, 0)
+      }
+
+      document.getElementById('generate').onclick = snow
+    </script>
+  </body>
+</html>
